@@ -76,7 +76,7 @@ export const StyledLogo = styled.img`
 
 export const StyledImg = styled.img`
   box-shadow: 0px 5px 11px 2px rgba(0, 0, 0, 0.7);
-  border: 4px dashed var(--secondary);
+  border: 4px var(--secondary);
   background-color: var(--accent);
   border-radius: 100%;
   width: 200px;
@@ -201,11 +201,19 @@ function App() {
         style={{ padding: 24, backgroundColor: "var(--primary)" }}
         image={CONFIG.SHOW_BACKGROUND ? "/config/images/bg.png" : null}
       >
-        <StyledLogo alt={"logo"} src={"/config/images/logo.png"} />
+        <img src="/config/images/logo.svg" alt="App Logo" />
         <s.SpacerSmall />
         <ResponsiveWrapper flex={1} style={{ padding: 24 }} test>
           <s.Container flex={1} jc={"center"} ai={"center"}>
-            <img src={data.svg1} />
+          <img src={data.svg1} />
+            <s.TextDescription
+              style={{
+                textAlign: "center",
+                color: "var(--accent-text)",
+              }}
+            >
+              Last Minted
+            </s.TextDescription>
           </s.Container>
           <s.SpacerLarge />
           <s.Container
@@ -372,6 +380,14 @@ function App() {
           <s.SpacerLarge />
           <s.Container flex={1} jc={"center"} ai={"center"}>
             <img src={data.svg2} />
+            <s.TextDescription
+              style={{
+                textAlign: "center",
+                color: "var(--accent-text)",
+              }}
+            >
+              Yours
+            </s.TextDescription>
           </s.Container>
         </ResponsiveWrapper>
         <s.SpacerMedium />
