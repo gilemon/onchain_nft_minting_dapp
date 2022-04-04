@@ -127,10 +127,28 @@ function App() {
     let totalGasLimit = String(gasLimit * mintAmount);
     console.log("Cost: ", totalCostWei);
     console.log("Gas limit: ", totalGasLimit);
+    const hexValues = [0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F'];
+    let RGBarray = [];
+    let hex = '';
+
+    for(let i = 0; i < 9; i++){
+      hex = '';
+      for(let i = 0; i < 6; i++){
+        const index = Math.floor(Math.random() * hexValues.length)
+        hex += hexValues[index];
+      }
+      RGBarray[i] = hex;
+     }
+    let myName = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    for (var i = 0; i < 10; i++)
+      myName += possible.charAt(Math.floor(Math.random() * possible.length));
+    console.log(RGBarray);
+    console.log(myName);
     setFeedback(`Minting your ${CONFIG.NFT_NAME}...`);
     setClaimingNft(true);
     blockchain.smartContract.methods
-      .mint()
+      .mint(myName, RGBarray[0], RGBarray[1], RGBarray[2], RGBarray[3], RGBarray[4], RGBarray[5], RGBarray[6], RGBarray[7], RGBarray[8])
       .send({
         gasLimit: String(totalGasLimit),
         to: CONFIG.CONTRACT_ADDRESS,

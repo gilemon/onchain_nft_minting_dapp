@@ -1,13 +1,13 @@
 {
-  "CONTRACT_ADDRESS": "0x635997e6CB0c30E1171CB5C977ca11aB72e00FC3",
-  "SCAN_LINK": "https://rinkeby.etherscan.io/token/0x635997e6CB0c30E1171CB5C977ca11aB72e00FC3",
+  "CONTRACT_ADDRESS": "0x15AcfD69842B52B5ef4c7c57a6468FFf96bB146C",
+  "SCAN_LINK": "https://rinkeby.etherscan.io/token/0x15AcfD69842B52B5ef4c7c57a6468FFf96bB146C",
   "NETWORK": {
     "NAME": "Rinkeby",
     "SYMBOL": "ETH",
     "ID": 4
   },
-  "NFT_NAME": "Pretty Awesome Words",
-  "SYMBOL": "PWA",
+  "NFT_NAME": "OnChain Picture",
+  "SYMBOL": "OCP",
   "MAX_SUPPLY": 1000,
   "WEI_COST": 75000000000000000,
   "DISPLAY_COST": 0.075,
