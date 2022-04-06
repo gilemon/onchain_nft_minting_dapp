@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 // Amended by Gilemon
+// from https://github.com/HashLips/hashlips_nft_minting_dapp
 /**
     !Disclaimer!
     These contracts have been used to create tutorials,
@@ -42,7 +43,7 @@ contract OnChainPicture is ERC721Enumerable, Ownable {
   // public
   function mint(string memory _mintedBy, string memory _pix1, string memory _pix2, string memory _pix3, string memory _pix4, string memory _pix5, string memory _pix6, string memory _pix7, string memory _pix8, string memory _pix9) public payable {
     uint256 supply = totalSupply();
-    require(supply + 1 <= 1000);
+    require(supply + 1 <= 100); //only 100 tokens
     
     Picture memory newPicture = Picture(
         string(abi.encodePacked('OCP #', uint256(supply + 1).toString())), 
@@ -79,7 +80,7 @@ contract OnChainPicture is ERC721Enumerable, Ownable {
               '<rect height="100" width="100" fill="#',currentPicture.pix7,'" x="0" y="200"/>',
               '<rect height="100" width="100" fill="#',currentPicture.pix8,'" x="100" y="200"/>',
               '<rect height="100" width="100" fill="#',currentPicture.pix9,'" x="200" y="200"/>',
-              '<text x="20" y="280" fill="#fff" font-size="12" font-family="Arial, Helvetica, sans-serif">',currentPicture.name,'</text>',
+              '<text x="20" y="280" fill="#fff" font-size="12" font-family="Arial, Helvetica, sans-serif">',currentPicture.description,'</text>',
               '</svg>'
           )
       ));
@@ -93,7 +94,17 @@ contract OnChainPicture is ERC721Enumerable, Ownable {
                           currentPicture.name,
                           '", "description":"OnChain Picture for Hackathon token minted by ', 
                           currentPicture.description,
-                          '", "image": "', 
+                          '", "attributes":"[',
+                          '{"trait_type": "pix1", "value": "',currentPicture.pix1,'"},'
+                          '{"trait_type": "pix2", "value": "',currentPicture.pix2,'"},'
+                          '{"trait_type": "pix3", "value": "',currentPicture.pix3,'"},'
+                          '{"trait_type": "pix4", "value": "',currentPicture.pix4,'"},'
+                          '{"trait_type": "pix5", "value": "',currentPicture.pix5,'"},'
+                          '{"trait_type": "pix6", "value": "',currentPicture.pix6,'"},'
+                          '{"trait_type": "pix7", "value": "',currentPicture.pix7,'"},'
+                          '{"trait_type": "pix8", "value": "',currentPicture.pix8,'"},'
+                          '{"trait_type": "pix9", "value": "',currentPicture.pix9,'"}'
+                          ']", "image": "', 
                           'data:image/svg+xml;base64,', 
                           buildImage(_tokenId),
                           '"}')))));

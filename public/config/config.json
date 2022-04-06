@@ -8,11 +8,13 @@
   },
   "NFT_NAME": "OnChain Picture",
   "SYMBOL": "OCP",
-  "MAX_SUPPLY": 1000,
+  "MAX_SUPPLY": 100,
   "WEI_COST": 75000000000000000,
   "DISPLAY_COST": 0.075,
   "GAS_LIMIT": 469785,
   "MARKETPLACE": "Opeansea",
   "MARKETPLACE_LINK": "https://opensea.io/collection/nerdy-coder-clones",
-  "SHOW_BACKGROUND": true
+  "SHOW_BACKGROUND": true,
+  "NFT_PICTURE_WIDTH": 50,
+  "NFT_PICTURE_HEIGHT": 50
 }

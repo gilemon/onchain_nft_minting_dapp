@@ -4,6 +4,7 @@ import { connect } from "./redux/blockchain/blockchainActions";
 import { fetchData } from "./redux/data/dataActions";
 import * as s from "./styles/globalStyles";
 import styled from "styled-components";
+import { PNG } from 'pngjs/browser';
 
 const truncate = (input, len) =>
   input.length > len ? `${input.substring(0, len)}...` : input;
@@ -101,6 +102,7 @@ function App() {
   const [claimingNft, setClaimingNft] = useState(false);
   const [feedback, setFeedback] = useState(`Click buy to mint your NFT.`);
   const [mintAmount, setMintAmount] = useState(1);
+  const [mintedBy, setMintedBy] = useState('');
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
     SCAN_LINK: "",
@@ -119,55 +121,67 @@ function App() {
     MARKETPLACE_LINK: "",
     SHOW_BACKGROUND: false,
   });
+  
+  const [pictureData, setPictureData] = useState([]);
 
   const claimNFTs = () => {
-    let cost = CONFIG.WEI_COST;
-    let gasLimit = CONFIG.GAS_LIMIT;
-    let totalCostWei = String(cost * mintAmount);
-    let totalGasLimit = String(gasLimit * mintAmount);
-    console.log("Cost: ", totalCostWei);
-    console.log("Gas limit: ", totalGasLimit);
-    const hexValues = [0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F'];
-    let RGBarray = [];
-    let hex = '';
-
-    for(let i = 0; i < 9; i++){
-      hex = '';
-      for(let i = 0; i < 6; i++){
-        const index = Math.floor(Math.random() * hexValues.length)
-        hex += hexValues[index];
+    if (mintedBy) {
+        let cost = CONFIG.WEI_COST;
+        let gasLimit = CONFIG.GAS_LIMIT;
+        let totalCostWei = String(cost * mintAmount);
+        let totalGasLimit = String(gasLimit * mintAmount);
+        console.log("Cost: ", totalCostWei);
+        console.log("Gas limit: ", totalGasLimit);
+        console.log("Last minted: ", data.totalSupply);
+        console.log(pictureData);
+        CONFIG.NFT_TOTAL_PIXELS_SIZE = CONFIG.NFT_PICTURE_WIDTH * CONFIG.NFT_PICTURE_HEIGHT;
+        let NFTtotalamountsqrt = Math.sqrt(CONFIG.MAX_SUPPLY);
+        let NFTHWsingle = Math.sqrt(CONFIG.NFT_TOTAL_PIXELS_SIZE/CONFIG.MAX_SUPPLY);
+        console.log(NFTHWsingle);
+        let tokenIDzero = data.totalSupply - 1;
+        let xid = tokenIDzero % NFTtotalamountsqrt;
+        let yid = Math.floor(tokenIDzero/NFTtotalamountsqrt);
+        let RGBarray = [];
+        let i = 0;
+        for (var y = 0; y < CONFIG.NFT_PICTURE_HEIGHT ; y++) {
+            for (var x = 0; x < CONFIG.NFT_PICTURE_WIDTH ; x++) {
+                if (((y >= ((yid) * NFTHWsingle)) && (y < ((yid+1) * NFTHWsingle))) && ((x >= ((xid) * NFTHWsingle)) && (x < ((xid+1) * NFTHWsingle)))) {
+                    var idx = (CONFIG.NFT_PICTURE_WIDTH * y + x);
+                    RGBarray[i] = pictureData[idx];
+                    i++;
+                }
+            }
+        }
+        console.log(RGBarray);
+        console.log(mintedBy);
+        setFeedback(`Hey ` + mintedBy + `! The blockchain is minting your ${CONFIG.NFT_NAME}...`);
+        setClaimingNft(true);
+        blockchain.smartContract.methods
+          .mint(mintedBy, RGBarray[0], RGBarray[1], RGBarray[2], RGBarray[3], RGBarray[4], RGBarray[5], RGBarray[6], RGBarray[7], RGBarray[8])
+          .send({
+            gasLimit: String(totalGasLimit),
+            to: CONFIG.CONTRACT_ADDRESS,
+            from: blockchain.account,
+            value: totalCostWei,
+          })
+          .once("error", (err) => {
+            console.log(err);
+            setFeedback("Sorry, something went wrong please try again later.");
+            setClaimingNft(false);
+          })
+          .then((receipt) => {
+            console.log(receipt);
+            setFeedback(
+              `WOW, the ${CONFIG.NFT_NAME} is yours! go visit Opensea.io to view it.`
+            );
+            setClaimingNft(false);
+            dispatch(fetchData(blockchain.account));
+          });
+      } else {
+          setFeedback(
+            `Please enter you name`
+          );
       }
-      RGBarray[i] = hex;
-     }
-    let myName = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    for (var i = 0; i < 10; i++)
-      myName += possible.charAt(Math.floor(Math.random() * possible.length));
-    console.log(RGBarray);
-    console.log(myName);
-    setFeedback(`Minting your ${CONFIG.NFT_NAME}...`);
-    setClaimingNft(true);
-    blockchain.smartContract.methods
-      .mint(myName, RGBarray[0], RGBarray[1], RGBarray[2], RGBarray[3], RGBarray[4], RGBarray[5], RGBarray[6], RGBarray[7], RGBarray[8])
-      .send({
-        gasLimit: String(totalGasLimit),
-        to: CONFIG.CONTRACT_ADDRESS,
-        from: blockchain.account,
-        value: totalCostWei,
-      })
-      .once("error", (err) => {
-        console.log(err);
-        setFeedback("Sorry, something went wrong please try again later.");
-        setClaimingNft(false);
-      })
-      .then((receipt) => {
-        console.log(receipt);
-        setFeedback(
-          `WOW, the ${CONFIG.NFT_NAME} is yours! go visit Opensea.io to view it.`
-        );
-        setClaimingNft(false);
-        dispatch(fetchData(blockchain.account));
-      });
   };
 
   const decrementMintAmount = () => {
@@ -185,6 +199,12 @@ function App() {
     }
     setMintAmount(newMintAmount);
   };
+  
+  const handleMintByChange = ({ target }) => {
+      console.log(target.value);
+      setMintedBy(target.value);
+      console.log(mintedBy);
+   };
 
   const getData = () => {
     if (blockchain.account !== "" && blockchain.smartContract !== null) {
@@ -200,7 +220,33 @@ function App() {
       },
     });
     const config = await configResponse.json();
-    SET_CONFIG(config);
+    console.log("NFT_PICTURE_WIDTH:" + config.NFT_PICTURE_WIDTH);
+    config.NFT_TOTAL_PIXELS_SIZE = parseInt(config.NFT_PICTURE_WIDTH) * parseInt(config.NFT_PICTURE_HEIGHT);
+    console.log("NFT_TOTAL_PIXELS_SIZE:" + config.NFT_TOTAL_PIXELS_SIZE);
+  
+    var canvas = document.getElementById('viewport');
+    console.log(canvas);
+    let contextc = canvas.getContext('2d');
+    let base_image = new Image();
+    base_image.src = '/config/images/final_nft.png';
+    base_image.onload = function() {
+        contextc.drawImage(base_image, 0, 0);
+        var imgd = contextc.getImageData(0, 0, parseInt(config.NFT_PICTURE_WIDTH), parseInt(config.NFT_PICTURE_HEIGHT));
+        var pix = imgd.data;
+        var arrayPx = [];
+        // Loop over each pixel
+        for (var y = 0; y < config.NFT_PICTURE_HEIGHT; y++) {
+            for (var x = 0; x < config.NFT_PICTURE_WIDTH; x++) {
+                var idx = (config.NFT_PICTURE_WIDTH * y + x) << 2;
+                // i+3 is alpha (the fourth element)
+                let rgb = pix[idx].toString(16).padStart(2, '0') + pix[idx+1].toString(16).padStart(2, '0') + pix[idx+2].toString(16).padStart(2, '0');
+                arrayPx.push(rgb);
+            }
+        }
+        console.log(arrayPx);
+        setPictureData(arrayPx);
+        SET_CONFIG(config);
+      }
   };
 
   useEffect(() => {
@@ -346,35 +392,18 @@ function App() {
                     </s.TextDescription>
                     <s.SpacerMedium />
                     <s.Container ai={"center"} jc={"center"} fd={"row"}>
-                      <StyledRoundButton
-                        style={{ lineHeight: 0.4 }}
-                        disabled={claimingNft ? 1 : 0}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          decrementMintAmount();
-                        }}
-                      >
-                        -
-                      </StyledRoundButton>
-                      <s.SpacerMedium />
+                      <label>
                       <s.TextDescription
                         style={{
                           textAlign: "center",
                           color: "var(--accent-text)",
                         }}
                       >
-                        {mintAmount}
+                        Your Name:
                       </s.TextDescription>
-                      <s.SpacerMedium />
-                      <StyledRoundButton
-                        disabled={claimingNft ? 1 : 0}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          incrementMintAmount();
-                        }}
-                      >
-                        +
-                      </StyledRoundButton>
+                        
+                        <input type="text" value={mintedBy} onChange={handleMintByChange}/>
+                      </label>
                     </s.Container>
                     <s.SpacerSmall />
                     <s.Container ai={"center"} jc={"center"} fd={"row"}>
@@ -432,7 +461,7 @@ function App() {
             gas limit.
           </s.TextDescription>
         </s.Container>
-      </s.Container>
+      </s.Container><canvas id="viewport" style={{display: "none"}}></canvas>
     </s.Screen>
   );
 }
