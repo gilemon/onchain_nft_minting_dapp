@@ -265,7 +265,7 @@ function App() {
         style={{ padding: 24, backgroundColor: "var(--primary)" }}
         image={CONFIG.SHOW_BACKGROUND ? "/config/images/bg.png" : null}
       >
-        <img src="/config/images/logo.svg" alt="App Logo" />
+        <img width="300px" src="/config/images/enigma-logo.svg" alt="App Logo" />
         <s.SpacerSmall />
         <ResponsiveWrapper flex={1} style={{ padding: 24 }} test>
           <s.Container flex={1} jc={"center"} ai={"center"}>
