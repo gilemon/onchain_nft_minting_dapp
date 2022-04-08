@@ -1,4 +1,4 @@
-# Onchain NFT minting dapp 🥨
+# OnChain Enigma Picture minting dapp 🥨
 
 This repo provides a nice and easy way for linking an existing NFT smart contract to this minting dapp. There are two ways of using this repo, you can go the simple route or the more complex one.
 
@@ -11,7 +11,7 @@ The more complex route allows you to add additional functionality if you are com
 If you are cloning the project then run this first, otherwise you can download the source code on the release page and skip this step.
 
 ```sh
-git clone https://github.com/HashLips/hashlips_nft_minting_dapp.git
+git clone hhttps://github.com/gilemon/onchain_nft_minting_dapp.git
 ```
 
 Make sure you have node.js installed so you can use npm, then run:
@@ -31,24 +31,28 @@ To link up your existing smart contract, go to the `public/config/config.json` f
 Note: this dapp is designed to work with the intended NFT smart contract, that only takes one parameter in the mint function "mintAmount". But you can change that in the App.js file if you need to use a smart contract that takes 2 params.
 
 ```json
+
 {
-  "CONTRACT_ADDRESS": "0x827acb09a2dc20e39c9aad7f7190d9bc53534192",
-  "SCAN_LINK": "https://polygonscan.com/token/0x827acb09a2dc20e39c9aad7f7190d9bc53534192",
+  "CONTRACT_ADDRESS": "0x15AcfD69842B52B5ef4c7c57a6468FFf96bB146C",
+  "SCAN_LINK": "https://rinkeby.etherscan.io/token/0x15AcfD69842B52B5ef4c7c57a6468FFf96bB146C",
   "NETWORK": {
-    "NAME": "Polygon",
-    "SYMBOL": "Matic",
-    "ID": 137
+    "NAME": "Rinkeby",
+    "SYMBOL": "ETH",
+    "ID": 4
   },
-  "NFT_NAME": "Nerdy Coder Clones",
-  "SYMBOL": "NCC",
-  "MAX_SUPPLY": 1000,
+  "NFT_NAME": "OnChain Picture",
+  "SYMBOL": "OCP",
+  "MAX_SUPPLY": 100,
   "WEI_COST": 75000000000000000,
   "DISPLAY_COST": 0.075,
-  "GAS_LIMIT": 285000,
-  "MARKETPLACE": "OpenSea",
+  "GAS_LIMIT": 469785,
+  "MARKETPLACE": "Opeansea",
   "MARKETPLACE_LINK": "https://opensea.io/collection/nerdy-coder-clones",
-  "SHOW_BACKGROUND": true
+  "SHOW_BACKGROUND": true,
+  "NFT_PICTURE_WIDTH": 50,
+  "NFT_PICTURE_HEIGHT": 50
 }
+
 ```
 
 Make sure you copy the contract ABI from remix and paste it in the `public/config/abi.json` file.
@@ -60,12 +64,12 @@ Next change the theme colors to your liking in the `public/config/theme.css` fil
 
 ```css
 :root {
-  --primary: #ebc908;
-  --primary-text: #1a1a1a;
-  --secondary: #ff1dec;
-  --secondary-text: #ffffff;
-  --accent: #ffffff;
-  --accent-text: #000000;
+  --primary: #aaa;
+  --primary-text: #fff;
+  --secondary: #FEFEFF;
+  --secondary-text: #020D2C;
+  --accent: #A0C4F7;
+  --accent-text: #ffffff;
 }
 ```
 
@@ -83,8 +87,8 @@ Also remember to update the short_name and name fields in the `public/manifest.j
 
 ```json
 {
-  "short_name": "NCC",
-  "name": "Coder Clone NFT"
+  "short_name": "OCP",
+  "name": "OnChain Enigma Picture"
 }
 ```
 
