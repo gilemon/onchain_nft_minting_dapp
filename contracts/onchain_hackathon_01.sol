@@ -2,6 +2,7 @@
 
 // Amended by Gilemon
 // from https://github.com/HashLips/hashlips_nft_minting_dapp
+// see at 0x15AcfD69842B52B5ef4c7c57a6468FFf96bB146C
 /**
     !Disclaimer!
     These contracts have been used to create tutorials,
